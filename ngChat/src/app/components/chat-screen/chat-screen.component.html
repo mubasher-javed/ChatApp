@@ -124,9 +124,11 @@
       <button
         id="start"
         (click)="toggleRecording()"
-        class="btn btn-primary btn-lg"
+        class="btn mb-2"
+        [ngClass]="{ 'btn-danger': isRecording, 'btn-primary': !isRecording }"
       >
-        Start Recording
+        {{ recordingBtnTxt }}
+        {{ recordingDuration > 0 ? recordingDuration : "" }}
       </button>
       <!-- end recording button -->
     </div>
