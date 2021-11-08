@@ -22,8 +22,12 @@ export class ChatScreenComponent implements OnInit {
   roomId!: any;
   uploader!: FileUploader;
   imgSrc = '';
+  recordingDuration = 0;
+  isRecording = false;
+  recordingBtnTxt = 'Start recording';
   private recorder!: MediaRecorder;
   private gumStream!: any;
+  private timer: any;
 
   constructor(
     private chatService: ChatService,
@@ -164,10 +168,17 @@ export class ChatScreenComponent implements OnInit {
   toggleRecording() {
     if (this.recorder && this.recorder.state == 'recording') {
       this.recorder.stop();
+      this.isRecording = false;
+      this.recordingBtnTxt = 'Start recording';
+      clearInterval(this.timer);
+      this.recordingDuration = 0;
       this.gumStream.getAudioTracks()[0].stop();
       return;
     }
     console.log('recording started');
+    this.timer = setInterval(() => {
+      this.recordingDuration++;
+    }, 1000);
 
     navigator.mediaDevices
       .getUserMedia({
@@ -201,6 +212,8 @@ export class ChatScreenComponent implements OnInit {
           });
         };
         this.recorder.start();
+        this.recordingBtnTxt = 'Stop recording!';
+        this.isRecording = true;
       });
   }
 }
