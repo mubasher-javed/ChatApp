@@ -3,6 +3,7 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
@@ -13,4 +14,8 @@ body {
 
 app-chat-screen {
   flex: 1;
+}
+
+.login-form {
+  margin-top: 4rem;
 }
