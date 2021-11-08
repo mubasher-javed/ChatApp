@@ -1,4 +1,4 @@
-import { Component, OnInit } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit } from '@angular/core';
 import { FormBuilder, FormGroup } from '@angular/forms';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Params } from '@angular/router';
@@ -29,12 +29,15 @@ export class ChatScreenComponent implements OnInit {
   private gumStream!: any;
   private timer: any;
 
+  // @ViewChild('scrollBox', { static: true }) scrollContainer!: ElementRef;
+
   constructor(
     private chatService: ChatService,
     private userService: UserService,
     private route: ActivatedRoute,
     public fb: FormBuilder,
-    private sanitizer: DomSanitizer
+    private sanitizer: DomSanitizer,
+    private changeDetector: ChangeDetectorRef
   ) {
     this.imageForm = this.fb.group({
       image: [null],
@@ -46,6 +49,7 @@ export class ChatScreenComponent implements OnInit {
   }
 
   ngOnInit(): void {
+    // this.scrollToBottom();
     // get the user data from route
     this.route.params.subscribe((params: Params) => {
       this.receiverId = params.id;
@@ -215,5 +219,11 @@ export class ChatScreenComponent implements OnInit {
         this.recordingBtnTxt = 'Stop recording!';
         this.isRecording = true;
       });
+  }
+
+  scrollToBottom() {
+    // commenting for now and moving forward
+    // let height = this.scrollContainer.nativeElement.scrollHeight;
+    // this.scrollContainer.nativeElement.scrollTop = height;
   }
 }
