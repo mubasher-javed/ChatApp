@@ -79,7 +79,7 @@
   </div>
   <div class="fixed-bottom" style="margin-left: 20%; margin-right: 20px">
     <!-- message form -->
-    <div class="form-inline justify-content-around mb-2">
+    <!-- <div class="form-inline justify-content-around mb-2">
       <div>
         <input
           [(ngModel)]="message"
@@ -89,8 +89,37 @@
           (keyup)="$event.keyCode === 13 && sendMessage()"
         />
       </div>
-    </div>
+    </div> -->
     <!-- end message form -->
+
+    <!-- New material message sending form -->
+    <div class="d-flex mx-5 mb-3">
+      <input type="file" accept="image/*, video/*" class="d-none" #fileUpload />
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <button mat-flat-button color="primary" (click)="fileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+        </div>
+        <input
+          type="text"
+          placeholder="Enter message here..."
+          class="form-control message-field"
+        />
+        <div class="input-group-append">
+          <button mat-flat-button color="primary">
+            <mat-icon>send</mat-icon>
+          </button>
+          <button mat-button color="secondary">
+            {{ recordingDuration > 0 ? recordingDuration : "" }}
+            <mat-icon color="primary">mic</mat-icon>
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <!-- End material message sending form -->
+
     <!-- video form -->
     <!-- <div class="form-inline justify-content-around mb-2">
         <div>
@@ -108,7 +137,7 @@
     <!-- end video form -->
 
     <!-- image form -->
-    <div class="form-inline justify-content-around mb-2">
+    <!-- <div class="form-inline justify-content-around mb-2">
       <div>
         <input
           type="file"
@@ -120,10 +149,10 @@
           Upload Image
         </button>
       </div>
-    </div>
+    </div> -->
     <!-- End image form -->
     <!-- recording button -->
-    <button
+    <!-- <button
       id="start"
       (click)="toggleRecording()"
       class="btn mb-2"
@@ -131,7 +160,7 @@
     >
       {{ recordingBtnTxt }}
       {{ recordingDuration > 0 ? recordingDuration : "" }}
-    </button>
+    </button> -->
     <!-- end recording button -->
   </div>
 </section>

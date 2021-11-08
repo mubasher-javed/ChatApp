@@ -1,0 +1,23 @@
+<div class="d-flex mx-5">
+  <input type="file" accept="image/*, video/*" class="d-none" #fileUpload />
+  <div class="input-group">
+    <div class="input-group-prepend">
+      <button mat-flat-button color="primary" (click)="fileUpload.click()">
+        <mat-icon>attach_file</mat-icon>
+      </button>
+    </div>
+    <input
+      type="text"
+      placeholder="Enter message here..."
+      class="form-control message-field"
+    />
+    <div class="input-group-append">
+      <button mat-flat-button color="primary">
+        <mat-icon>send</mat-icon>
+      </button>
+      <button mat-button color="secondary">
+        <mat-icon color="primary">mic</mat-icon>
+      </button>
+    </div>
+  </div>
+</div>
