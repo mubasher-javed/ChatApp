@@ -1,0 +1,134 @@
+<section class="col">
+  <div class="container">
+    <div
+      class="messages d-flex flex-column"
+      style="min-height: 70vh; overflow-y: auto"
+    >
+      <div *ngFor="let msg of messages">
+        <span
+          *ngIf="msg.receiverId !== receiverId; else sent"
+          class="message float-left rounded bg-primary p-2 text-white mt-2 mb-2"
+        >
+          {{ msg.body && msg.body }}
+          <a
+            [href]="msg.imgPath"
+            *ngIf="msg.imgPath"
+            style="height: 50px; width: 50px"
+          >
+            <img
+              [src]="msg.imgPath"
+              *ngIf="msg.imgPath"
+              class="img-thumbnail"
+              style="height: 50px; width: 50px"
+              alt=""
+            />
+          </a>
+          <span *ngIf="msg.audioPath">
+            <audio controls [src]="msg.audioPath"></audio>
+          </span>
+          <span *ngIf="msg.videoPath">
+            <video [src]="msg.videoPath" controls height="250" width="250">
+              User video
+            </video>
+          </span>
+        </span>
+
+        <ng-template #sent class="mx-2">
+          <span
+            class="
+              align-self-end
+              float-right
+              rounded
+              bg-success
+              p-2
+              text-white
+              mt-2
+              mb-2
+            "
+            *ngIf="msg.receiverId === receiverId"
+          >
+            {{ msg.body }}
+            <a [href]="msg.imgPath" style="height: 50px; width: 50px">
+              <img
+                [src]="msg.imgPath"
+                *ngIf="msg.imgPath"
+                class="img-thumbnail"
+                style="height: 50px; width: 50px"
+                alt=""
+              />
+            </a>
+
+            <span *ngIf="msg.audioPath">
+              <audio controls [src]="msg.audioPath"></audio>
+            </span>
+            <span *ngIf="msg.videoPath">
+              <video [src]="msg.videoPath" controls height="250" width="250">
+                User video
+              </video>
+            </span>
+          </span>
+        </ng-template>
+      </div>
+      <div *ngIf="messages.length === 0">
+        <span class="text-center m-5 h3">
+          You don't have any chat with this user
+        </span>
+      </div>
+    </div>
+    <div class="fixed-bottom" style="margin-left: 20%; margin-right: 20px">
+      <!-- message form -->
+      <div class="form-inline justify-content-around mb-2">
+        <div>
+          <input
+            [(ngModel)]="message"
+            type="text"
+            class="form-control"
+            placeholder="Enter message here"
+            (keyup)="$event.keyCode === 13 && sendMessage()"
+          />
+        </div>
+      </div>
+      <!-- end message form -->
+      <!-- video form -->
+      <!-- <div class="form-inline justify-content-around mb-2">
+        <div>
+          <input
+            type="file"
+            accept="video/*"
+            value="Upload video"
+            (change)="handleVideoUpload($event)"
+          />
+          <button class="btn btn-sm btn-secondary" (click)="submitVideoForm()">
+            Upload
+          </button>
+        </div>
+      </div> -->
+      <!-- end video form -->
+
+      <!-- image form -->
+      <div class="form-inline justify-content-around mb-2">
+        <div>
+          <input
+            type="file"
+            accept="image/*"
+            value="Upload Image"
+            (change)="uploadImage($event)"
+          />
+          <button class="btn btn-sm btn-secondary" (click)="submitImageForm()">
+            Upload Image
+          </button>
+        </div>
+      </div>
+      <!-- End image form -->
+      <!-- recording button -->
+      <button
+        id="start"
+        (click)="toggleRecording()"
+        class="btn btn-primary btn-lg"
+      >
+        Start Recording
+      </button>
+      <!-- end recording button -->
+    </div>
+  </div>
+</section>

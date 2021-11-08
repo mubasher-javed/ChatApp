@@ -1,0 +1,34 @@
+<div class="container mt-4" style="max-width: 600px">
+  <form method="" action="" [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
+    <div class="form-group">
+      <label for="email">Email <span class="text-danger">*</span></label>
+      <input
+        id="email"
+        class="form-control"
+        type="email"
+        name="email"
+        formControlName="email"
+      />
+    </div>
+
+    <div class="form-group">
+      <label for="password">Password <span class="text-danger">*</span></label>
+      <input
+        formControlName="password"
+        required
+        id="password"
+        class="form-control"
+        type="password"
+        name="password"
+      />
+    </div>
+
+    <button
+      class="btn btn-success btn-block"
+      type="submit"
+      [disabled]="!loginForm.valid"
+    >
+      Login
+    </button>
+  </form>
+</div>

@@ -1,0 +1,34 @@
+<div class="bg-light">
+  <section
+    class="d-flex align-items-center flex-column"
+    style="min-height: 90vh"
+  >
+    <ul class="list-group" *ngIf="users">
+      <li
+        class="list-group-item position-relative mt-1"
+        *ngFor="let user of users"
+        routerLinkActive="user-active "
+      >
+        <a
+          [routerLink]="[user._id]"
+          style="text-decoration: none"
+          role="button"
+          routerLinkActive="p-2, text-decoration-none"
+        >
+          {{ user.username }}
+        </a>
+        <!-- online badge -->
+        <!-- <span
+            class="
+              position-absolute
+              top-0
+              start-100
+              translate-middle
+              bg-success
+            "
+            style="border-radius: 100%; border: 4px solid #28a745"
+          ></span> -->
+      </li>
+    </ul>
+  </section>
+</div>
