@@ -122,28 +122,48 @@ export class ChatScreenComponent implements OnInit {
     let uploadedImg = this.file;
     let currentUser = this.userService.getCurrentUser();
     let formData = new FormData();
-    formData.set('image', uploadedImg);
+    formData.set('file', uploadedImg);
     formData.append('senderId', currentUser._id);
     formData.append('receiverId', this.receiverId);
     formData.append('roomId', this.roomId.roomId);
+    formData.append('upload_preset', 'wjsxo0gr');
 
     this.userService.sendImage(formData).subscribe(
       (res: any) => {
         // if picture is saved successfully show the picture preview in messages
-        if (res.success) {
-          // emit a new event with new-image name
-          let data = {
-            imgPath: res.data.imgPath,
-            receiver: this.receiver,
-            sender: currentUser,
-            roomId: this.roomId,
-          };
-          this.chatService.sendMessage(data);
-        }
+        console.log('image saved at ', res.secure_url);
+        console.log(res);
       },
       (error) => console.log(error)
     );
   }
+
+  // private matImgSubmit() {
+  //   let uploadedImg = this.file;
+  //   let currentUser = this.userService.getCurrentUser();
+  //   let formData = new FormData();
+  //   formData.set('image', uploadedImg);
+  //   formData.append('senderId', currentUser._id);
+  //   formData.append('receiverId', this.receiverId);
+  //   formData.append('roomId', this.roomId.roomId);
+
+  //   this.userService.sendImage(formData).subscribe(
+  //     (res: any) => {
+  //       // if picture is saved successfully show the picture preview in messages
+  //       if (res.success) {
+  //         // emit a new event with new-image name
+  //         let data = {
+  //           imgPath: res.data.imgPath,
+  //           receiver: this.receiver,
+  //           sender: currentUser,
+  //           roomId: this.roomId,
+  //         };
+  //         this.chatService.sendMessage(data);
+  //       }
+  //     },
+  //     (error) => console.log(error)
+  //   );
+  // }
 
   sendMessage() {
     let currentUser = this.userService.getCurrentUser();
