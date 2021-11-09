@@ -1,6 +1,9 @@
 <!-- Add this into #scrollBox section for scrolling -->
 <!-- [scrollTop]="scrollBox.scrollHeight" -->
-<section class="col" style="margin-top: 52px">
+<section
+  class="col pr-3"
+  style="margin-top: 52px; max-width: 90%; float: right"
+>
   <div
     class="messages d-flex flex-column"
     style="max-height: 70vh; overflow-y: auto"
@@ -10,7 +13,6 @@
       <span
         *ngIf="msg.receiverId !== receiverId; else sent"
         class="message float-left rounded bg-primary p-2 text-white my-2"
-        style="margin-left: 120px"
       >
         {{ msg.body && msg.body }}
         <a
@@ -71,13 +73,13 @@
         </span>
       </ng-template>
     </div>
-    <div *ngIf="messages.length === 0">
+    <div *ngIf="messages.length === 0" style="margin-left: 120px">
       <span class="text-center m-5 h3">
         You don't have any chat with this user
       </span>
     </div>
   </div>
-  <div class="fixed-bottom" style="margin-left: 20%; margin-right: 20px">
+  <div class="fixed-bottom" style="margin-left: 12%; margin-right: 20px">
     <!-- message form -->
     <!-- <div class="form-inline justify-content-around mb-2">
       <div>
@@ -94,7 +96,13 @@
 
     <!-- New material message sending form -->
     <div class="d-flex mx-5 mb-3">
-      <input type="file" accept="image/*, video/*" class="d-none" #fileUpload />
+      <input
+        type="file"
+        accept="image/*, video/*"
+        class="d-none"
+        #fileUpload
+        (change)="handleFileChange(fileUpload)"
+      />
       <div class="input-group">
         <div class="input-group-prepend">
           <button mat-flat-button color="primary" (click)="fileUpload.click()">
@@ -103,17 +111,26 @@
         </div>
         <input
           type="text"
+          [(ngModel)]="message"
+          (keyup)="$event.keyCode === 13 && sendMessage()"
           placeholder="Enter message here..."
           class="form-control message-field"
         />
         <div class="input-group-append">
-          <button mat-flat-button color="primary">
+          <button mat-flat-button color="primary" (click)="handleFileSubmit()">
             <mat-icon>send</mat-icon>
           </button>
-          <button mat-button color="secondary">
+          <!-- recording button -->
+          <button
+            mat-mini-fab
+            class="ml-1"
+            [color]="isRecording ? 'accent' : 'primary'"
+            (click)="toggleRecording()"
+          >
             {{ recordingDuration > 0 ? recordingDuration : "" }}
-            <mat-icon color="primary">mic</mat-icon>
+            <mat-icon>mic</mat-icon>
           </button>
+          <!-- end recording button -->
         </div>
       </div>
     </div>
