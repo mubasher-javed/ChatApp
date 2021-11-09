@@ -1,5 +1,11 @@
-<div class="container mt-4" style="max-width: 600px">
-  <form method="" action="" [formGroup]="loginForm" (ngSubmit)="handleSubmit()">
+<div class="container" style="max-width: 600px">
+  <form
+    class="login-form"
+    method=""
+    action=""
+    [formGroup]="loginForm"
+    (ngSubmit)="handleSubmit()"
+  >
     <div class="form-group">
       <label for="email">Email <span class="text-danger">*</span></label>
       <input

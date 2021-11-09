@@ -3,14 +3,30 @@ html,
 body {
   height: 100%;
 }
+
 body {
   margin: 0;
   font-family: Roboto, "Helvetica Neue", sans-serif;
 }
+
 /* * {
   outline: 1px solid #f00 !important;
 } */
 
 app-chat-screen {
   flex: 1;
+}
+
+.login-form {
+  margin-top: 4rem;
+}
+
+.messages::-webkit-scrollbar {
+  width: 9px;
+  background-color: rgba(0, 0, 0, 0.178);
+  border-radius: 100px;
+}
+.messages::-webkit-scrollbar-thumb {
+  background-color: dodgerblue;
+  border-radius: 100px;
 }

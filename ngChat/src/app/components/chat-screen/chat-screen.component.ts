@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup } from '@angular/forms';
-import { DomSanitizer } from '@angular/platform-browser';
+import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
-import { FileUploader } from 'ng2-file-upload';
 import { ChatService } from 'src/app/services/chat.service';
 import { UserService } from 'src/app/services/user.service';
 import { CommonUser, UserMessage } from 'src/app/user.interface';
@@ -13,39 +11,31 @@ import { CommonUser, UserMessage } from 'src/app/user.interface';
   styleUrls: ['./chat-screen.component.css'],
 })
 export class ChatScreenComponent implements OnInit {
-  imageForm: FormGroup;
-  videoForm: FormGroup;
   message = '';
   messages: UserMessage[] = [];
   receiverId!: string;
   receiver!: CommonUser;
   roomId!: any;
-  uploader!: FileUploader;
-  imgSrc = '';
   recordingDuration = 0;
   isRecording = false;
   recordingBtnTxt = 'Start recording';
   private recorder!: MediaRecorder;
   private gumStream!: any;
   private timer: any;
+  private fileName!: string;
+  private file: any;
+
+  // @ViewChild('scrollBox', { static: true }) scrollContainer!: ElementRef;
 
   constructor(
     private chatService: ChatService,
     private userService: UserService,
     private route: ActivatedRoute,
-    public fb: FormBuilder,
-    private sanitizer: DomSanitizer
-  ) {
-    this.imageForm = this.fb.group({
-      image: [null],
-    });
-
-    this.videoForm = this.fb.group({
-      video: [null],
-    });
-  }
+    public fb: FormBuilder
+  ) {}
 
   ngOnInit(): void {
+    // this.scrollToBottom();
     // get the user data from route
     this.route.params.subscribe((params: Params) => {
       this.receiverId = params.id;
@@ -80,27 +70,31 @@ export class ChatScreenComponent implements OnInit {
     });
   }
 
-  handleVideoUpload(event: any) {
-    // @ts-ignore
-    const file = (event?.target as HTMLInputElement)?.files[0];
-    this.videoForm.patchValue({
-      video: file,
-    });
-    this.videoForm.get('video')?.updateValueAndValidity();
+  handleFileChange(fileUpload: HTMLInputElement) {
+    this.file = fileUpload.files![0];
+    this.fileName = fileUpload.files![0].name;
+  }
+  handleFileSubmit() {
+    let fileExt = this.fileName.split('.')[1];
+    let validImgFormats = ['png', 'jpeg', 'jpg', 'gif'];
+    let validVidFormats = ['mp4'];
+
+    // it mean user want to upload an image
+    if (validImgFormats.includes(fileExt)) {
+      this.matImgSubmit();
+      return;
+    }
+
+    // mean user want to upload a video
+    if (validVidFormats.includes(fileExt)) {
+      this.matVideoSubmit();
+      return;
+    }
   }
 
-  uploadImage(event: any) {
-    // @ts-ignore
-    const file = (event?.target as HTMLInputElement)?.files[0];
-    this.imageForm.patchValue({
-      image: file,
-    });
-    this.imageForm.get('image')?.updateValueAndValidity();
-  }
-
-  submitVideoForm() {
+  private matVideoSubmit() {
     let currentUser = this.userService.getCurrentUser();
-    let uploadedVideo = this.videoForm.get('video')?.value;
+    let uploadedVideo = this.file;
     let formData = new FormData();
     formData.set('video', uploadedVideo);
     formData.append('senderId', currentUser._id);
@@ -111,7 +105,6 @@ export class ChatScreenComponent implements OnInit {
         // if video uploaded successfully then emit an event for server
         if (res.success) {
           console.log('response after video upload is', res);
-          this.videoForm.reset({ video: null });
           let data = {
             videoPath: res.data.videoPath,
             receiver: this.receiver,
@@ -125,32 +118,52 @@ export class ChatScreenComponent implements OnInit {
     );
   }
 
-  submitImageForm() {
-    let uploadedImg = this.imageForm.get('image')?.value;
+  private matImgSubmit() {
+    let uploadedImg = this.file;
     let currentUser = this.userService.getCurrentUser();
     let formData = new FormData();
-    formData.set('image', uploadedImg);
+    formData.set('file', uploadedImg);
     formData.append('senderId', currentUser._id);
     formData.append('receiverId', this.receiverId);
     formData.append('roomId', this.roomId.roomId);
+    formData.append('upload_preset', 'wjsxo0gr');
 
     this.userService.sendImage(formData).subscribe(
       (res: any) => {
         // if picture is saved successfully show the picture preview in messages
-        if (res.success) {
-          // emit a new event with new-image name
-          let data = {
-            imgPath: res.data.imgPath,
-            receiver: this.receiver,
-            sender: currentUser,
-            roomId: this.roomId,
-          };
-          this.chatService.sendMessage(data);
-        }
+        console.log('image saved at ', res.secure_url);
+        console.log(res);
       },
       (error) => console.log(error)
     );
   }
+
+  // private matImgSubmit() {
+  //   let uploadedImg = this.file;
+  //   let currentUser = this.userService.getCurrentUser();
+  //   let formData = new FormData();
+  //   formData.set('image', uploadedImg);
+  //   formData.append('senderId', currentUser._id);
+  //   formData.append('receiverId', this.receiverId);
+  //   formData.append('roomId', this.roomId.roomId);
+
+  //   this.userService.sendImage(formData).subscribe(
+  //     (res: any) => {
+  //       // if picture is saved successfully show the picture preview in messages
+  //       if (res.success) {
+  //         // emit a new event with new-image name
+  //         let data = {
+  //           imgPath: res.data.imgPath,
+  //           receiver: this.receiver,
+  //           sender: currentUser,
+  //           roomId: this.roomId,
+  //         };
+  //         this.chatService.sendMessage(data);
+  //       }
+  //     },
+  //     (error) => console.log(error)
+  //   );
+  // }
 
   sendMessage() {
     let currentUser = this.userService.getCurrentUser();
@@ -215,5 +228,11 @@ export class ChatScreenComponent implements OnInit {
         this.recordingBtnTxt = 'Stop recording!';
         this.isRecording = true;
       });
+  }
+
+  scrollToBottom() {
+    // commenting for now and moving forward
+    // let height = this.scrollContainer.nativeElement.scrollHeight;
+    // this.scrollContainer.nativeElement.scrollTop = height;
   }
 }

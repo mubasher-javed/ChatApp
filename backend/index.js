@@ -8,6 +8,7 @@ import Message from "./models/message.js";
 import Room from "./models/room.js";
 import auth from "./routes/auth.routes.js";
 import users from "./routes/users.routes.js";
+
 const ObjectId = mongoose.Types.ObjectId;
 const app = express();
 
@@ -15,6 +16,7 @@ if (!config.get("privateKey")) {
   console.error("Provide secret key before first.");
   process.exit(1);
 }
+
 const port = 8000;
 mongoose
   .connect("mongodb://localhost/chatApp")

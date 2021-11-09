@@ -1,20 +1,58 @@
-<section class="col">
-  <div class="container">
-    <div
-      class="messages d-flex flex-column"
-      style="min-height: 70vh; overflow-y: auto"
-    >
-      <div *ngFor="let msg of messages">
-        <span
-          *ngIf="msg.receiverId !== receiverId; else sent"
-          class="message float-left rounded bg-primary p-2 text-white mt-2 mb-2"
+<!-- Add this into #scrollBox section for scrolling -->
+<!-- [scrollTop]="scrollBox.scrollHeight" -->
+<section
+  class="col pr-3"
+  style="margin-top: 52px; max-width: 85.5vw; float: right"
+>
+  <div
+    class="messages d-flex flex-column"
+    style="max-height: 70vh; overflow-y: auto"
+    #scrollBox
+  >
+    <div *ngFor="let msg of messages">
+      <span
+        *ngIf="msg.receiverId !== receiverId; else sent"
+        class="message float-left rounded bg-primary p-2 text-white my-2"
+      >
+        {{ msg.body && msg.body }}
+        <a
+          [href]="msg.imgPath"
+          *ngIf="msg.imgPath"
+          style="height: 50px; width: 50px"
         >
-          {{ msg.body && msg.body }}
-          <a
-            [href]="msg.imgPath"
+          <img
+            [src]="msg.imgPath"
             *ngIf="msg.imgPath"
+            class="img-thumbnail"
             style="height: 50px; width: 50px"
-          >
+            alt=""
+          />
+        </a>
+        <span *ngIf="msg.audioPath">
+          <audio controls [src]="msg.audioPath"></audio>
+        </span>
+        <span *ngIf="msg.videoPath">
+          <video [src]="msg.videoPath" controls height="250" width="250">
+            User video
+          </video>
+        </span>
+      </span>
+
+      <ng-template #sent class="mx-2">
+        <span
+          class="
+            align-self-end
+            float-right
+            rounded
+            bg-success
+            p-2
+            text-white
+            m-2
+          "
+          *ngIf="msg.receiverId === receiverId"
+        >
+          {{ msg.body }}
+          <a [href]="msg.imgPath" style="height: 50px; width: 50px">
             <img
               [src]="msg.imgPath"
               *ngIf="msg.imgPath"
@@ -23,6 +61,7 @@
               alt=""
             />
           </a>
+
           <span *ngIf="msg.audioPath">
             <audio controls [src]="msg.audioPath"></audio>
           </span>
@@ -32,65 +71,74 @@
             </video>
           </span>
         </span>
-
-        <ng-template #sent class="mx-2">
-          <span
-            class="
-              align-self-end
-              float-right
-              rounded
-              bg-success
-              p-2
-              text-white
-              mt-2
-              mb-2
-            "
-            *ngIf="msg.receiverId === receiverId"
-          >
-            {{ msg.body }}
-            <a [href]="msg.imgPath" style="height: 50px; width: 50px">
-              <img
-                [src]="msg.imgPath"
-                *ngIf="msg.imgPath"
-                class="img-thumbnail"
-                style="height: 50px; width: 50px"
-                alt=""
-              />
-            </a>
-
-            <span *ngIf="msg.audioPath">
-              <audio controls [src]="msg.audioPath"></audio>
-            </span>
-            <span *ngIf="msg.videoPath">
-              <video [src]="msg.videoPath" controls height="250" width="250">
-                User video
-              </video>
-            </span>
-          </span>
-        </ng-template>
-      </div>
-      <div *ngIf="messages.length === 0">
-        <span class="text-center m-5 h3">
-          You don't have any chat with this user
-        </span>
-      </div>
+      </ng-template>
     </div>
-    <div class="fixed-bottom" style="margin-left: 20%; margin-right: 20px">
-      <!-- message form -->
-      <div class="form-inline justify-content-around mb-2">
-        <div>
-          <input
-            [(ngModel)]="message"
-            type="text"
-            class="form-control"
-            placeholder="Enter message here"
-            (keyup)="$event.keyCode === 13 && sendMessage()"
-          />
+    <div *ngIf="messages.length === 0" style="margin-left: 120px">
+      <span class="text-center m-5 h3">
+        You don't have any chat with this user
+      </span>
+    </div>
+  </div>
+  <div class="fixed-bottom" style="margin-left: 12%; margin-right: 20px">
+    <!-- message form -->
+    <!-- <div class="form-inline justify-content-around mb-2">
+      <div>
+        <input
+          [(ngModel)]="message"
+          type="text"
+          class="form-control"
+          placeholder="Enter message here"
+          (keyup)="$event.keyCode === 13 && sendMessage()"
+        />
+      </div>
+    </div> -->
+    <!-- end message form -->
+
+    <!-- New material message sending form -->
+    <div class="d-flex mx-5 mb-3">
+      <input
+        type="file"
+        accept="image/*, video/*"
+        class="d-none"
+        #fileUpload
+        (change)="handleFileChange(fileUpload)"
+      />
+      <div class="input-group">
+        <div class="input-group-prepend">
+          <button mat-flat-button color="primary" (click)="fileUpload.click()">
+            <mat-icon>attach_file</mat-icon>
+          </button>
+        </div>
+        <input
+          type="text"
+          [(ngModel)]="message"
+          (keyup)="$event.keyCode === 13 && sendMessage()"
+          placeholder="Enter message here..."
+          class="form-control message-field"
+        />
+        <div class="input-group-append">
+          <button mat-flat-button color="primary" (click)="handleFileSubmit()">
+            <mat-icon>send</mat-icon>
+          </button>
+          <!-- recording button -->
+          <button
+            mat-mini-fab
+            class="ml-1"
+            [color]="isRecording ? 'accent' : 'primary'"
+            (click)="toggleRecording()"
+          >
+            {{ recordingDuration > 0 ? recordingDuration : "" }}
+            <mat-icon>mic</mat-icon>
+          </button>
+          <!-- end recording button -->
         </div>
       </div>
-      <!-- end message form -->
-      <!-- video form -->
-      <!-- <div class="form-inline justify-content-around mb-2">
+    </div>
+
+    <!-- End material message sending form -->
+
+    <!-- video form -->
+    <!-- <div class="form-inline justify-content-around mb-2">
         <div>
           <input
             type="file"
@@ -103,34 +151,33 @@
           </button>
         </div>
       </div> -->
-      <!-- end video form -->
+    <!-- end video form -->
 
-      <!-- image form -->
-      <div class="form-inline justify-content-around mb-2">
-        <div>
-          <input
-            type="file"
-            accept="image/*"
-            value="Upload Image"
-            (change)="uploadImage($event)"
-          />
-          <button class="btn btn-sm btn-secondary" (click)="submitImageForm()">
-            Upload Image
-          </button>
-        </div>
+    <!-- image form -->
+    <!-- <div class="form-inline justify-content-around mb-2">
+      <div>
+        <input
+          type="file"
+          accept="image/*"
+          value="Upload Image"
+          (change)="uploadImage($event)"
+        />
+        <button class="btn btn-sm btn-secondary" (click)="submitImageForm()">
+          Upload Image
+        </button>
       </div>
-      <!-- End image form -->
-      <!-- recording button -->
-      <button
-        id="start"
-        (click)="toggleRecording()"
-        class="btn mb-2"
-        [ngClass]="{ 'btn-danger': isRecording, 'btn-primary': !isRecording }"
-      >
-        {{ recordingBtnTxt }}
-        {{ recordingDuration > 0 ? recordingDuration : "" }}
-      </button>
-      <!-- end recording button -->
-    </div>
+    </div> -->
+    <!-- End image form -->
+    <!-- recording button -->
+    <!-- <button
+      id="start"
+      (click)="toggleRecording()"
+      class="btn mb-2"
+      [ngClass]="{ 'btn-danger': isRecording, 'btn-primary': !isRecording }"
+    >
+      {{ recordingBtnTxt }}
+      {{ recordingDuration > 0 ? recordingDuration : "" }}
+    </button> -->
+    <!-- end recording button -->
   </div>
 </section>
