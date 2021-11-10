@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
+import isMobile from 'src/app/screenSize.utils';
 import { ChatService } from 'src/app/services/chat.service';
 import { UserService } from 'src/app/services/user.service';
 import { CommonUser, UserMessage } from 'src/app/user.interface';
@@ -24,6 +25,7 @@ export class ChatScreenComponent implements OnInit {
   private timer: any;
   private fileName!: string;
   private file: any;
+  mobile = false;
 
   // @ViewChild('scrollBox', { static: true }) scrollContainer!: ElementRef;
 
@@ -35,6 +37,7 @@ export class ChatScreenComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    isMobile().subscribe((result) => (this.mobile = result));
     // this.scrollToBottom();
     // get the user data from route
     this.route.params.subscribe((params: Params) => {
@@ -130,9 +133,18 @@ export class ChatScreenComponent implements OnInit {
 
     this.userService.sendImage(formData).subscribe(
       (res: any) => {
-        // if picture is saved successfully show the picture preview in messages
-        console.log('image saved at ', res.secure_url);
-        console.log(res);
+        let data = {
+          imgPath: res.secure_url,
+          receiver: this.receiver,
+          sender: currentUser,
+          roomId: this.roomId,
+        };
+        // now send call to express backend to save the image path for next time
+        this.userService.saveImageLocally(data).subscribe((res: any) => {
+          if (res.success) {
+            this.chatService.sendMessage(data);
+          }
+        });
       },
       (error) => console.log(error)
     );
@@ -158,7 +170,7 @@ export class ChatScreenComponent implements OnInit {
   //           sender: currentUser,
   //           roomId: this.roomId,
   //         };
-  //         this.chatService.sendMessage(data);
+  // this.chatService.sendMessage(data);
   //       }
   //     },
   //     (error) => console.log(error)

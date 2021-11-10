@@ -25,7 +25,6 @@ export class ChatService {
   getMessages() {
     return new Observable<UserMessage>((observer) => {
       this.socket.on('new-message', (data: UserMessage) => {
-        console.log('received data from backed is', data);
         observer.next(data);
       });
     });

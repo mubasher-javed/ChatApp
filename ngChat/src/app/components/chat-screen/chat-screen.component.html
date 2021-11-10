@@ -1,8 +1,8 @@
 <!-- Add this into #scrollBox section for scrolling -->
 <!-- [scrollTop]="scrollBox.scrollHeight" -->
 <section
-  class="col pr-3"
-  style="margin-top: 52px; max-width: 85.5vw; float: right"
+  class="col pr-3 w-100 float-right"
+  style="margin-top: 52px; max-width: 85vw"
 >
   <div
     class="messages d-flex flex-column"
@@ -82,16 +82,16 @@
   <div class="fixed-bottom" style="margin-left: 12%; margin-right: 20px">
     <!-- message form -->
     <!-- <div class="form-inline justify-content-around mb-2">
-      <div>
-        <input
-          [(ngModel)]="message"
-          type="text"
-          class="form-control"
-          placeholder="Enter message here"
-          (keyup)="$event.keyCode === 13 && sendMessage()"
-        />
-      </div>
-    </div> -->
+        <div>
+          <input
+            [(ngModel)]="message"
+            type="text"
+            class="form-control"
+            placeholder="Enter message here"
+            (keyup)="$event.keyCode === 13 && sendMessage()"
+          />
+        </div>
+      </div> -->
     <!-- end message form -->
 
     <!-- New material message sending form -->
@@ -139,45 +139,45 @@
 
     <!-- video form -->
     <!-- <div class="form-inline justify-content-around mb-2">
-        <div>
-          <input
-            type="file"
-            accept="video/*"
-            value="Upload video"
-            (change)="handleVideoUpload($event)"
-          />
-          <button class="btn btn-sm btn-secondary" (click)="submitVideoForm()">
-            Upload
-          </button>
-        </div>
-      </div> -->
+          <div>
+            <input
+              type="file"
+              accept="video/*"
+              value="Upload video"
+              (change)="handleVideoUpload($event)"
+            />
+            <button class="btn btn-sm btn-secondary" (click)="submitVideoForm()">
+              Upload
+            </button>
+          </div>
+        </div> -->
     <!-- end video form -->
 
     <!-- image form -->
     <!-- <div class="form-inline justify-content-around mb-2">
-      <div>
-        <input
-          type="file"
-          accept="image/*"
-          value="Upload Image"
-          (change)="uploadImage($event)"
-        />
-        <button class="btn btn-sm btn-secondary" (click)="submitImageForm()">
-          Upload Image
-        </button>
-      </div>
-    </div> -->
+        <div>
+          <input
+            type="file"
+            accept="image/*"
+            value="Upload Image"
+            (change)="uploadImage($event)"
+          />
+          <button class="btn btn-sm btn-secondary" (click)="submitImageForm()">
+            Upload Image
+          </button>
+        </div>
+      </div> -->
     <!-- End image form -->
     <!-- recording button -->
     <!-- <button
-      id="start"
-      (click)="toggleRecording()"
-      class="btn mb-2"
-      [ngClass]="{ 'btn-danger': isRecording, 'btn-primary': !isRecording }"
-    >
-      {{ recordingBtnTxt }}
-      {{ recordingDuration > 0 ? recordingDuration : "" }}
-    </button> -->
+        id="start"
+        (click)="toggleRecording()"
+        class="btn mb-2"
+        [ngClass]="{ 'btn-danger': isRecording, 'btn-primary': !isRecording }"
+      >
+        {{ recordingBtnTxt }}
+        {{ recordingDuration > 0 ? recordingDuration : "" }}
+      </button> -->
     <!-- end recording button -->
   </div>
 </section>

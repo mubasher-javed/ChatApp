@@ -40,11 +40,12 @@ export class UserService {
       .pipe(catchError(this.handleError));
   }
 
-  // sendImage(data: any) {
-  //   return this.http
-  //     .post(this.URL + 'upload/image', data)
-  //     .pipe(catchError(this.handleError));
-  // }
+  saveImageLocally(data: any) {
+    return this.http
+      .post(this.URL + 'upload/image', data)
+      .pipe(catchError(this.handleError));
+  }
+
   sendImage(data: any) {
     let cloudinaryUrl =
       'https://api.cloudinary.com/v1_1/mubasharjaved/image/upload';
