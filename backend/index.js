@@ -69,15 +69,29 @@ app.use("/api/users", users);
 app.use("/api/login", auth);
 
 // POST File
-app.post("/api/upload/image", imgUpload.single("image"), async (req, res) => {
-  let { senderId, receiverId, roomId } = req.body;
-  if (!req.file) return res.send({ success: false });
+// app.post("/api/upload/image", imgUpload.single("image"), async (req, res) => {
+//   let { senderId, receiverId, roomId } = req.body;
+//   if (!req.file) return res.send({ success: false });
 
+//   const message = new Message({
+//     senderId: senderId,
+//     receiverId,
+//     roomId,
+//     imgPath: `http://localhost:${port}/images/${req.file.filename}`,
+//   });
+//   await message.save();
+//   return res.send({ success: true, data: message });
+// });
+
+app.post("/api/upload/image", async (req, res) => {
+  let { sender, receiver, roomId, imgPath } = req.body;
+  // if (!req.file) return res.send({ success: false });
+  console.log("received data is", req.body);
   const message = new Message({
-    senderId: senderId,
-    receiverId,
-    roomId,
-    imgPath: `http://localhost:${port}/images/${req.file.filename}`,
+    senderId: sender._id,
+    receiverId: receiver._id,
+    roomId: roomId.roomId,
+    imgPath,
   });
   await message.save();
   return res.send({ success: true, data: message });

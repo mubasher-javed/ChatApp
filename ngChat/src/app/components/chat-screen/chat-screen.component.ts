@@ -133,9 +133,18 @@ export class ChatScreenComponent implements OnInit {
 
     this.userService.sendImage(formData).subscribe(
       (res: any) => {
-        // if picture is saved successfully show the picture preview in messages
-        console.log('image saved at ', res.secure_url);
-        console.log(res);
+        let data = {
+          imgPath: res.secure_url,
+          receiver: this.receiver,
+          sender: currentUser,
+          roomId: this.roomId,
+        };
+        // now send call to express backend to save the image path for next time
+        this.userService.saveImageLocally(data).subscribe((res: any) => {
+          if (res.success) {
+            this.chatService.sendMessage(data);
+          }
+        });
       },
       (error) => console.log(error)
     );
@@ -161,7 +170,7 @@ export class ChatScreenComponent implements OnInit {
   //           sender: currentUser,
   //           roomId: this.roomId,
   //         };
-  //         this.chatService.sendMessage(data);
+  // this.chatService.sendMessage(data);
   //       }
   //     },
   //     (error) => console.log(error)
