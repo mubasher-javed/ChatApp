@@ -1,26 +1,43 @@
-<div class="bg-light position-fixed" style="margin-top: 52px; min-width: 10vw">
-  <section
-    class="d-flex align-items-center flex-column"
-    style="min-height: 100vh"
+<button
+  style="top: 10px; left: 92px; z-index: 2000"
+  mat-icon-button
+  color="primary"
+  class="position-relative"
+  (click)="drawer.toggle()"
+  *ngIf="mobile"
+>
+  <mat-icon>menu</mat-icon>
+</button>
+
+<mat-drawer #drawer mode="over" [opened]="!mobile">
+  <div
+    class="bg-light position-fixed"
+    style="min-width: fit-content; z-index: 10000000"
+    [ngStyle]="{ 'margin-top': !mobile ? '53px' : '20px' }"
   >
-    <ng-container *ngFor="let user of users">
-      <div
-        [routerLink]="[user._id]"
-        routerLinkActive="user-active bg-white"
-        class="row align-items-center my-1 ml-1 w-100"
-        style="border-radius: 9px; cursor: pointer"
-      >
-        <img
-          class="mx-2 my-2"
-          src="assets/images/male-avatar.jpg"
-          alt=""
-          height="40"
-          width="40"
-          style="border-radius: 50%"
-        />
-        <p class="mr-3 mt-2">{{ user.username }}</p>
-        <!-- <small class="mr-2 mt-2 text-black-50 align-self-start">12:00PM</small> -->
-      </div>
-    </ng-container>
-  </section>
-</div>
+    <section
+      class="d-flex align-items-center flex-column"
+      style="min-height: 100vh"
+    >
+      <ng-container *ngFor="let user of users">
+        <div
+          [routerLink]="[user._id]"
+          routerLinkActive="user-active bg-white"
+          class="row align-items-center my-1 ml-1 w-100"
+          style="border-radius: 9px; cursor: pointer"
+        >
+          <img
+            class="mx-2 my-2"
+            src="assets/images/male-avatar.jpg"
+            alt=""
+            height="40"
+            width="40"
+            style="border-radius: 50%"
+          />
+          <p class="mr-3 mt-2">{{ user.username }}</p>
+          <!-- <small class="mr-2 mt-2 text-black-50 align-self-start">12:00PM</small> -->
+        </div>
+      </ng-container>
+    </section>
+  </div>
+</mat-drawer>

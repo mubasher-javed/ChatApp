@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder } from '@angular/forms';
 import { ActivatedRoute, Params } from '@angular/router';
+import isMobile from 'src/app/screenSize.utils';
 import { ChatService } from 'src/app/services/chat.service';
 import { UserService } from 'src/app/services/user.service';
 import { CommonUser, UserMessage } from 'src/app/user.interface';
@@ -24,6 +25,7 @@ export class ChatScreenComponent implements OnInit {
   private timer: any;
   private fileName!: string;
   private file: any;
+  mobile = false;
 
   // @ViewChild('scrollBox', { static: true }) scrollContainer!: ElementRef;
 
@@ -35,6 +37,7 @@ export class ChatScreenComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
+    isMobile().subscribe((result) => (this.mobile = result));
     // this.scrollToBottom();
     // get the user data from route
     this.route.params.subscribe((params: Params) => {

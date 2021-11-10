@@ -3,7 +3,12 @@ import { NgModule } from '@angular/core';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatDividerModule } from '@angular/material/divider';
+import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatSidenavModule } from '@angular/material/sidenav';
+import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { FileUploadModule } from 'ng2-file-upload';
@@ -42,6 +47,11 @@ import { UserService } from './services/user.service';
     MatButtonModule,
     FileUploadModule,
     MatIconModule,
+    MatDividerModule,
+    MatGridListModule,
+    MatToolbarModule,
+    MatSidenavModule,
+    MatDialogModule,
     ToastrModule.forRoot({ positionClass: 'toast-top-right' }),
   ],
   providers: [UserService, ChatService],

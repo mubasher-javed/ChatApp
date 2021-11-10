@@ -21,12 +21,13 @@ app-chat-screen {
   margin-top: 4rem;
 }
 
-.messages::-webkit-scrollbar {
+/* Will give all scrollbar's same styling */
+*::-webkit-scrollbar {
   width: 9px;
   background-color: rgba(0, 0, 0, 0.178);
   border-radius: 100px;
 }
-.messages::-webkit-scrollbar-thumb {
-  background-color: dodgerblue;
+*::-webkit-scrollbar-thumb {
   border-radius: 100px;
+  background-color: rgb(6, 102, 199);
 }
