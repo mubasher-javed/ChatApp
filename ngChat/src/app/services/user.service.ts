@@ -50,25 +50,22 @@ export class UserService {
   }
 
   sendImage(data: any) {
-    // let cloudinaryUrl =
-    //   'https://api.cloudinary.com/v1_1/mubasharjaved/image/upload';
-
     return this.http
-      .post(this.cloudImgUrl, data)
+      .post(this.cloudImgUrl, data, {
+        reportProgress: true,
+        observe: 'events',
+      })
       .pipe(catchError(this.handleError));
   }
 
   sendVidOnline(data: any) {
     return this.http
-      .post(this.cloudVidUrl, data)
+      .post(this.cloudVidUrl, data, {
+        reportProgress: true,
+        observe: 'events',
+      })
       .pipe(catchError(this.handleError));
   }
-
-  // sendVideo(data: any) {
-  //   return this.http
-  //     .post(this.URL + 'upload/video', data)
-  //     .pipe(catchError(this.handleError));
-  // }
 
   sendVideoLocally(data: any) {
     return this.http

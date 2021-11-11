@@ -1,3 +1,4 @@
+import { HttpEvent, HttpEventType } from '@angular/common/http';
 import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import isMobile from 'src/app/screenSize.utils';
@@ -20,6 +21,7 @@ export class ChatScreenComponent implements OnInit {
   isRecording = false;
   recordingBtnTxt = 'Start recording';
   mobile = false;
+  progress: number = 0;
   private recorder!: MediaRecorder;
   private gumStream!: any;
   private timer: any;
@@ -103,26 +105,39 @@ export class ChatScreenComponent implements OnInit {
     formData.append('senderId', currentUser._id);
     formData.append('receiverId', this.receiverId);
     formData.append('roomId', this.roomId.roomId);
-    // formData.append('upload_preset', 'wjsxo0gr');
     formData.append('upload_preset', this.uploadPreset);
 
     this.userService.sendVidOnline(formData).subscribe(
-      (res: any) => {
-        console.log('response while saving video is', res);
+      (event: HttpEvent<any>) => {
+        switch (event.type) {
+          case HttpEventType.Response:
+            let res = event.body;
+            console.log('response while saving video is', res);
 
-        let data = {
-          videoPath: res.secure_url,
-          receiver: this.receiver,
-          sender: currentUser,
-          roomId: this.roomId,
-        };
-        // now send request to backend to save video address locally
-        this.userService.sendVideoLocally(data).subscribe((res: any) => {
-          console.log(res);
-          if (res.success) {
-            this.chatService.sendMessage(data);
-          }
-        });
+            let data = {
+              videoPath: res.secure_url,
+              receiver: this.receiver,
+              sender: currentUser,
+              roomId: this.roomId,
+            };
+            // now send request to backend to save video address locally
+            this.userService.sendVideoLocally(data).subscribe((res: any) => {
+              console.log(res);
+              if (res.success) {
+                this.progress = 0;
+                this.chatService.sendMessage(data);
+              }
+            });
+            break;
+          case HttpEventType.UploadProgress:
+            if (event.total) {
+              this.progress = Math.round((event.loaded / event.total) * 100);
+            }
+            break;
+
+          default:
+            break;
+        }
       },
       (error) => console.error(error)
     );
@@ -139,19 +154,33 @@ export class ChatScreenComponent implements OnInit {
     formData.append('upload_preset', this.uploadPreset);
 
     this.userService.sendImage(formData).subscribe(
-      (res: any) => {
-        let data = {
-          imgPath: res.secure_url,
-          receiver: this.receiver,
-          sender: currentUser,
-          roomId: this.roomId,
-        };
-        // now send call to express backend to save the image path for next time
-        this.userService.saveImageLocally(data).subscribe((res: any) => {
-          if (res.success) {
-            this.chatService.sendMessage(data);
-          }
-        });
+      (event: HttpEvent<any>) => {
+        switch (event.type) {
+          case HttpEventType.Response:
+            let res = event.body;
+            let data = {
+              imgPath: res.secure_url,
+              receiver: this.receiver,
+              sender: currentUser,
+              roomId: this.roomId,
+            };
+            // now send call to express backend to save the image path for next time
+            this.userService.saveImageLocally(data).subscribe((res: any) => {
+              if (res.success) {
+                this.chatService.sendMessage(data);
+                this.progress = 0;
+              }
+            });
+            break;
+          case HttpEventType.UploadProgress:
+            if (event.total) {
+              this.progress = Math.round((event.loaded / event.total) * 100);
+            }
+            break;
+
+          default:
+            break;
+        }
       },
       (error) => console.log(error)
     );

@@ -7,6 +7,7 @@ import { MatDialogModule } from '@angular/material/dialog';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatGridListModule } from '@angular/material/grid-list';
 import { MatIconModule } from '@angular/material/icon';
+import { MatProgressBarModule } from '@angular/material/progress-bar';
 import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { BrowserModule } from '@angular/platform-browser';
@@ -52,6 +53,7 @@ import { UserService } from './services/user.service';
     MatToolbarModule,
     MatSidenavModule,
     MatDialogModule,
+    MatProgressBarModule,
     ToastrModule.forRoot({ positionClass: 'toast-top-right' }),
   ],
   providers: [UserService, ChatService],

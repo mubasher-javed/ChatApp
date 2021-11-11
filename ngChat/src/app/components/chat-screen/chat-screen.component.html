@@ -81,20 +81,12 @@
     </div>
   </div>
   <div class="fixed-bottom" style="margin-left: 12%; margin-right: 20px">
-    <!-- message form -->
-    <!-- <div class="form-inline justify-content-around mb-2">
-        <div>
-          <input
-            [(ngModel)]="message"
-            type="text"
-            class="form-control"
-            placeholder="Enter message here"
-            (keyup)="$event.keyCode === 13 && sendMessage()"
-          />
-        </div>
-      </div> -->
-    <!-- end message form -->
-
+    <mat-progress-bar
+      class="mb-2"
+      mode="determinate"
+      [value]="progress"
+      *ngIf="progress > 0"
+    ></mat-progress-bar>
     <!-- New material message sending form -->
     <div class="d-flex mx-5 mb-3">
       <input
@@ -137,48 +129,5 @@
     </div>
 
     <!-- End material message sending form -->
-
-    <!-- video form -->
-    <!-- <div class="form-inline justify-content-around mb-2">
-          <div>
-            <input
-              type="file"
-              accept="video/*"
-              value="Upload video"
-              (change)="handleVideoUpload($event)"
-            />
-            <button class="btn btn-sm btn-secondary" (click)="submitVideoForm()">
-              Upload
-            </button>
-          </div>
-        </div> -->
-    <!-- end video form -->
-
-    <!-- image form -->
-    <!-- <div class="form-inline justify-content-around mb-2">
-        <div>
-          <input
-            type="file"
-            accept="image/*"
-            value="Upload Image"
-            (change)="uploadImage($event)"
-          />
-          <button class="btn btn-sm btn-secondary" (click)="submitImageForm()">
-            Upload Image
-          </button>
-        </div>
-      </div> -->
-    <!-- End image form -->
-    <!-- recording button -->
-    <!-- <button
-        id="start"
-        (click)="toggleRecording()"
-        class="btn mb-2"
-        [ngClass]="{ 'btn-danger': isRecording, 'btn-primary': !isRecording }"
-      >
-        {{ recordingBtnTxt }}
-        {{ recordingDuration > 0 ? recordingDuration : "" }}
-      </button> -->
-    <!-- end recording button -->
   </div>
 </section>
