@@ -23,6 +23,9 @@ export class UserService {
     localStorage.getItem('token') || ''
   );
 
+  cloudImgUrl = 'https://api.cloudinary.com/v1_1/mubasharjaved/image/upload';
+  cloudVidUrl = 'https://api.cloudinary.com/v1_1/mubasharjaved/video/upload';
+
   constructor(private http: HttpClient) {}
 
   allUsers() {
@@ -47,15 +50,27 @@ export class UserService {
   }
 
   sendImage(data: any) {
-    let cloudinaryUrl =
-      'https://api.cloudinary.com/v1_1/mubasharjaved/image/upload';
+    // let cloudinaryUrl =
+    //   'https://api.cloudinary.com/v1_1/mubasharjaved/image/upload';
 
     return this.http
-      .post(cloudinaryUrl, data)
+      .post(this.cloudImgUrl, data)
       .pipe(catchError(this.handleError));
   }
 
-  sendVideo(data: any) {
+  sendVidOnline(data: any) {
+    return this.http
+      .post(this.cloudVidUrl, data)
+      .pipe(catchError(this.handleError));
+  }
+
+  // sendVideo(data: any) {
+  //   return this.http
+  //     .post(this.URL + 'upload/video', data)
+  //     .pipe(catchError(this.handleError));
+  // }
+
+  sendVideoLocally(data: any) {
     return this.http
       .post(this.URL + 'upload/video', data)
       .pipe(catchError(this.handleError));

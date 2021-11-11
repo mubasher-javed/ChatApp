@@ -68,33 +68,22 @@ app.use(morgan("tiny"));
 app.use("/api/users", users);
 app.use("/api/login", auth);
 
-// POST File
-// app.post("/api/upload/image", imgUpload.single("image"), async (req, res) => {
-//   let { senderId, receiverId, roomId } = req.body;
-//   if (!req.file) return res.send({ success: false });
-
-//   const message = new Message({
-//     senderId: senderId,
-//     receiverId,
-//     roomId,
-//     imgPath: `http://localhost:${port}/images/${req.file.filename}`,
-//   });
-//   await message.save();
-//   return res.send({ success: true, data: message });
-// });
-
 app.post("/api/upload/image", async (req, res) => {
   let { sender, receiver, roomId, imgPath } = req.body;
   // if (!req.file) return res.send({ success: false });
   console.log("received data is", req.body);
-  const message = new Message({
-    senderId: sender._id,
-    receiverId: receiver._id,
-    roomId: roomId.roomId,
-    imgPath,
-  });
-  await message.save();
-  return res.send({ success: true, data: message });
+  try {
+    const message = new Message({
+      senderId: sender._id,
+      receiverId: receiver._id,
+      roomId: roomId.roomId,
+      imgPath,
+    });
+    await message.save();
+    return res.send({ success: true, data: message });
+  } catch (error) {
+    return res.send({ success: false, error });
+  }
 });
 
 app.post("/api/upload/audio", audioUpload.single("audio"), async (req, res) => {
@@ -106,29 +95,38 @@ app.post("/api/upload/audio", audioUpload.single("audio"), async (req, res) => {
     return res.send({ success: false });
   }
   console.log("audio received", req.file);
-  const message = new Message({
-    senderId: senderId,
-    receiverId,
-    roomId: roomId.roomId,
-    audioPath: `http://localhost:${port}/audios/${req.file.filename}`,
-  });
-  await message.save();
-  return res.send({ success: true, data: message });
+  try {
+    const message = new Message({
+      senderId: senderId,
+      receiverId,
+      roomId: roomId.roomId,
+      audioPath: `http://localhost:${port}/audios/${req.file.filename}`,
+    });
+    await message.save();
+    return res.send({ success: true, data: message });
+  } catch (error) {
+    return res.send({
+      success: false,
+      error,
+    });
+  }
 });
 
 app.post("/api/upload/video", videoUpload.single("video"), async (req, res) => {
-  let { senderId, receiverId, roomId } = req.body;
-  if (!req.file) return res.send({ success: false });
-
-  console.log("Video is available!");
-  const message = new Message({
-    senderId,
-    receiverId,
-    roomId,
-    videoPath: `http://localhost:${port}/videos/${req.file.filename}`,
-  });
-  await message.save();
-  return res.send({ success: true, data: message });
+  let { sender, receiver, roomId, videoPath } = req.body;
+  console.log("req.body received from frontend is", req.body);
+  try {
+    const message = new Message({
+      senderId: sender._id,
+      receiverId: receiver._id,
+      roomId: roomId.roomId,
+      videoPath,
+    });
+    await message.save();
+    return res.send({ success: true, data: message });
+  } catch (error) {
+    return res.send({ success: false, error });
+  }
 });
 
 // todo: add room validation with Joi

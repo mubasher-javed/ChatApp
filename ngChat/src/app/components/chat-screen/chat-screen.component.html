@@ -1,13 +1,14 @@
 <!-- Add this into #scrollBox section for scrolling -->
-<!-- [scrollTop]="scrollBox.scrollHeight" -->
 <section
   class="col pr-3 w-100 float-right"
   style="margin-top: 52px; max-width: 85vw"
 >
   <div
+    id="messages-box"
     class="messages d-flex flex-column"
     style="max-height: 70vh; overflow-y: auto"
     #scrollBox
+    [scrollTop]="scrollBox.scrollHeight"
   >
     <div *ngFor="let msg of messages">
       <span

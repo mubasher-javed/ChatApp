@@ -1,5 +1,4 @@
-import { Component, OnInit } from '@angular/core';
-import { FormBuilder } from '@angular/forms';
+import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
 import { ActivatedRoute, Params } from '@angular/router';
 import isMobile from 'src/app/screenSize.utils';
 import { ChatService } from 'src/app/services/chat.service';
@@ -20,25 +19,26 @@ export class ChatScreenComponent implements OnInit {
   recordingDuration = 0;
   isRecording = false;
   recordingBtnTxt = 'Start recording';
+  mobile = false;
   private recorder!: MediaRecorder;
   private gumStream!: any;
   private timer: any;
   private fileName!: string;
-  private file: any;
-  mobile = false;
+  private file!: File;
+  private uploadPreset = 'wjsxo0gr';
 
-  // @ViewChild('scrollBox', { static: true }) scrollContainer!: ElementRef;
+  @ViewChild('scrollBox', { static: true }) scrollContainer!: ElementRef;
 
   constructor(
     private chatService: ChatService,
     private userService: UserService,
-    private route: ActivatedRoute,
-    public fb: FormBuilder
+    private route: ActivatedRoute
   ) {}
 
   ngOnInit(): void {
+    this.scrollToBottom();
+    // getDivHeight().subscribe((result) => console.log('div height is', result));
     isMobile().subscribe((result) => (this.mobile = result));
-    // this.scrollToBottom();
     // get the user data from route
     this.route.params.subscribe((params: Params) => {
       this.receiverId = params.id;
@@ -99,23 +99,30 @@ export class ChatScreenComponent implements OnInit {
     let currentUser = this.userService.getCurrentUser();
     let uploadedVideo = this.file;
     let formData = new FormData();
-    formData.set('video', uploadedVideo);
+    formData.set('file', uploadedVideo);
     formData.append('senderId', currentUser._id);
     formData.append('receiverId', this.receiverId);
     formData.append('roomId', this.roomId.roomId);
-    this.userService.sendVideo(formData).subscribe(
+    // formData.append('upload_preset', 'wjsxo0gr');
+    formData.append('upload_preset', this.uploadPreset);
+
+    this.userService.sendVidOnline(formData).subscribe(
       (res: any) => {
-        // if video uploaded successfully then emit an event for server
-        if (res.success) {
-          console.log('response after video upload is', res);
-          let data = {
-            videoPath: res.data.videoPath,
-            receiver: this.receiver,
-            sender: currentUser,
-            roomId: this.roomId,
-          };
-          this.chatService.sendMessage(data);
-        }
+        console.log('response while saving video is', res);
+
+        let data = {
+          videoPath: res.secure_url,
+          receiver: this.receiver,
+          sender: currentUser,
+          roomId: this.roomId,
+        };
+        // now send request to backend to save video address locally
+        this.userService.sendVideoLocally(data).subscribe((res: any) => {
+          console.log(res);
+          if (res.success) {
+            this.chatService.sendMessage(data);
+          }
+        });
       },
       (error) => console.error(error)
     );
@@ -129,7 +136,7 @@ export class ChatScreenComponent implements OnInit {
     formData.append('senderId', currentUser._id);
     formData.append('receiverId', this.receiverId);
     formData.append('roomId', this.roomId.roomId);
-    formData.append('upload_preset', 'wjsxo0gr');
+    formData.append('upload_preset', this.uploadPreset);
 
     this.userService.sendImage(formData).subscribe(
       (res: any) => {
@@ -150,36 +157,8 @@ export class ChatScreenComponent implements OnInit {
     );
   }
 
-  // private matImgSubmit() {
-  //   let uploadedImg = this.file;
-  //   let currentUser = this.userService.getCurrentUser();
-  //   let formData = new FormData();
-  //   formData.set('image', uploadedImg);
-  //   formData.append('senderId', currentUser._id);
-  //   formData.append('receiverId', this.receiverId);
-  //   formData.append('roomId', this.roomId.roomId);
-
-  //   this.userService.sendImage(formData).subscribe(
-  //     (res: any) => {
-  //       // if picture is saved successfully show the picture preview in messages
-  //       if (res.success) {
-  //         // emit a new event with new-image name
-  //         let data = {
-  //           imgPath: res.data.imgPath,
-  //           receiver: this.receiver,
-  //           sender: currentUser,
-  //           roomId: this.roomId,
-  //         };
-  // this.chatService.sendMessage(data);
-  //       }
-  //     },
-  //     (error) => console.log(error)
-  //   );
-  // }
-
   sendMessage() {
     let currentUser = this.userService.getCurrentUser();
-    console.log('message is', this.message);
     let data = {
       message: this.message,
       receiver: this.receiver,
@@ -221,7 +200,6 @@ export class ChatScreenComponent implements OnInit {
           formData.append('senderId', currentUser._id);
           formData.append('receiverId', this.receiverId);
           formData.append('roomId', this.roomId);
-          console.log('sending this room id', this.roomId);
           this.userService.sendAudio(formData).subscribe((res: any) => {
             if (res.success) {
               let data = {
@@ -244,7 +222,11 @@ export class ChatScreenComponent implements OnInit {
 
   scrollToBottom() {
     // commenting for now and moving forward
-    // let height = this.scrollContainer.nativeElement.scrollHeight;
-    // this.scrollContainer.nativeElement.scrollTop = height;
+    let height = this.scrollContainer.nativeElement.scrollHeight;
+    this.scrollContainer.nativeElement.scroll({
+      top: height,
+      left: 0,
+      behavior: 'smooth',
+    });
   }
 }
