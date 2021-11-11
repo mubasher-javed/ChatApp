@@ -17,17 +17,18 @@
   >
     <section
       class="d-flex align-items-center flex-column"
-      style="min-height: 100vh"
+      style="min-height: 100vh; min-width: 23vw"
+      [ngStyle]="{ 'min-width': mobile ? '23vw' : '12vw' }"
     >
       <ng-container *ngFor="let user of users">
         <div
           [routerLink]="[user._id]"
           routerLinkActive="user-active bg-white"
-          class="row align-items-center my-1 ml-1 w-100"
+          class="row align-items-center my-1 flex-nowrap"
           style="border-radius: 9px; cursor: pointer"
         >
           <img
-            class="mx-2 my-2"
+            class="m-2"
             src="assets/images/male-avatar.jpg"
             alt=""
             height="40"
