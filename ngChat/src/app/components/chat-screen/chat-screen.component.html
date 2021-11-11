@@ -1,13 +1,14 @@
 <!-- Add this into #scrollBox section for scrolling -->
-<!-- [scrollTop]="scrollBox.scrollHeight" -->
 <section
   class="col pr-3 w-100 float-right"
   style="margin-top: 52px; max-width: 85vw"
 >
   <div
+    id="messages-box"
     class="messages d-flex flex-column"
     style="max-height: 70vh; overflow-y: auto"
     #scrollBox
+    [scrollTop]="scrollBox.scrollHeight"
   >
     <div *ngFor="let msg of messages">
       <span
@@ -23,7 +24,6 @@
           <img
             [src]="msg.imgPath"
             *ngIf="msg.imgPath"
-            class="img-thumbnail"
             style="height: 50px; width: 50px"
             alt=""
           />
@@ -56,7 +56,6 @@
             <img
               [src]="msg.imgPath"
               *ngIf="msg.imgPath"
-              class="img-thumbnail"
               style="height: 50px; width: 50px"
               alt=""
             />
@@ -80,20 +79,44 @@
     </div>
   </div>
   <div class="fixed-bottom" style="margin-left: 12%; margin-right: 20px">
-    <!-- message form -->
-    <!-- <div class="form-inline justify-content-around mb-2">
-        <div>
-          <input
-            [(ngModel)]="message"
-            type="text"
-            class="form-control"
-            placeholder="Enter message here"
-            (keyup)="$event.keyCode === 13 && sendMessage()"
-          />
-        </div>
-      </div> -->
-    <!-- end message form -->
-
+    <div *ngIf="progress > 0">
+      <mat-progress-bar
+        class="mb-2"
+        mode="determinate"
+        [value]="progress"
+      ></mat-progress-bar>
+      <div class="position-relative" style="left: 50%; bottom: 5px">
+        {{ progress }}%
+      </div>
+    </div>
+    <!-- Image Preview -->
+    <ng-container *ngIf="progress === 0">
+      <div *ngIf="previewImgUrl && previewImgUrl !== ''">
+        <img
+          [src]="previewImgUrl"
+          [alt]=""
+          height="100"
+          width="100"
+          class="img-thumbnail"
+          style="position: relative; left: 4%; bottom: 5px"
+        />
+      </div>
+    </ng-container>
+    <!-- end image preview -->
+    <!-- Video preview -->
+    <ng-container *ngIf="progress === 0">
+      <div class="imagePreview" *ngIf="previewVidUrl && previewVidUrl !== ''">
+        <video
+          [src]="previewVidUrl"
+          height="200"
+          width="200"
+          style="position: relative; left: 4%; bottom: 5px"
+        >
+          Your browser not support videos
+        </video>
+      </div>
+    </ng-container>
+    <!-- end video preview -->
     <!-- New material message sending form -->
     <div class="d-flex mx-5 mb-3">
       <input
@@ -136,48 +159,5 @@
     </div>
 
     <!-- End material message sending form -->
-
-    <!-- video form -->
-    <!-- <div class="form-inline justify-content-around mb-2">
-          <div>
-            <input
-              type="file"
-              accept="video/*"
-              value="Upload video"
-              (change)="handleVideoUpload($event)"
-            />
-            <button class="btn btn-sm btn-secondary" (click)="submitVideoForm()">
-              Upload
-            </button>
-          </div>
-        </div> -->
-    <!-- end video form -->
-
-    <!-- image form -->
-    <!-- <div class="form-inline justify-content-around mb-2">
-        <div>
-          <input
-            type="file"
-            accept="image/*"
-            value="Upload Image"
-            (change)="uploadImage($event)"
-          />
-          <button class="btn btn-sm btn-secondary" (click)="submitImageForm()">
-            Upload Image
-          </button>
-        </div>
-      </div> -->
-    <!-- End image form -->
-    <!-- recording button -->
-    <!-- <button
-        id="start"
-        (click)="toggleRecording()"
-        class="btn mb-2"
-        [ngClass]="{ 'btn-danger': isRecording, 'btn-primary': !isRecording }"
-      >
-        {{ recordingBtnTxt }}
-        {{ recordingDuration > 0 ? recordingDuration : "" }}
-      </button> -->
-    <!-- end recording button -->
   </div>
 </section>
