@@ -22,14 +22,20 @@ export class ChatScreenComponent implements OnInit {
   recordingBtnTxt = 'Start recording';
   mobile = false;
   progress: number = 0;
+  previewImgUrl = '';
+  previewVidUrl = '';
   private recorder!: MediaRecorder;
   private gumStream!: any;
   private timer: any;
   private fileName!: string;
   private file!: File;
   private uploadPreset = 'wjsxo0gr';
+  private fileExt!: string;
+  private validImgFormats = ['png', 'jpeg', 'jpg', 'gif'];
+  private validVidFormats = ['mp4'];
 
   @ViewChild('scrollBox', { static: true }) scrollContainer!: ElementRef;
+  @ViewChild('fileUpload') selectedFiles!: ElementRef;
 
   constructor(
     private chatService: ChatService,
@@ -38,7 +44,6 @@ export class ChatScreenComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.scrollToBottom();
     // getDivHeight().subscribe((result) => console.log('div height is', result));
     isMobile().subscribe((result) => (this.mobile = result));
     // get the user data from route
@@ -73,25 +78,44 @@ export class ChatScreenComponent implements OnInit {
     this.chatService.getMessages().subscribe((message) => {
       return this.messages.push(message);
     });
+
+    this.scrollToBottom();
   }
 
   handleFileChange(fileUpload: HTMLInputElement) {
     this.file = fileUpload.files![0];
     this.fileName = fileUpload.files![0].name;
-  }
-  handleFileSubmit() {
-    let fileExt = this.fileName.split('.')[1];
-    let validImgFormats = ['png', 'jpeg', 'jpg', 'gif'];
-    let validVidFormats = ['mp4'];
+    this.fileExt = this.fileName.split('.')[1];
+    const reader = new FileReader();
 
+    // mean user selected the image
+    if (this.validImgFormats.includes(this.fileExt)) {
+      reader.onload = () => {
+        this.previewImgUrl = reader.result as string;
+      };
+      reader.readAsDataURL(this.file);
+      return;
+    }
+
+    // mean user selected the video
+    else if (this.validVidFormats.includes(this.fileExt)) {
+      reader.onload = () => {
+        this.previewVidUrl = reader.result as string;
+      };
+      reader.readAsDataURL(this.file);
+      return;
+    }
+  }
+
+  handleFileSubmit() {
     // it mean user want to upload an image
-    if (validImgFormats.includes(fileExt)) {
+    if (this.validImgFormats.includes(this.fileExt)) {
       this.matImgSubmit();
       return;
     }
 
     // mean user want to upload a video
-    if (validVidFormats.includes(fileExt)) {
+    if (this.validVidFormats.includes(this.fileExt)) {
       this.matVideoSubmit();
       return;
     }
@@ -125,6 +149,8 @@ export class ChatScreenComponent implements OnInit {
               console.log(res);
               if (res.success) {
                 this.progress = 0;
+                this.previewImgUrl = '';
+                this.previewVidUrl = '';
                 this.chatService.sendMessage(data);
               }
             });
@@ -169,6 +195,9 @@ export class ChatScreenComponent implements OnInit {
               if (res.success) {
                 this.chatService.sendMessage(data);
                 this.progress = 0;
+                this.previewImgUrl = '';
+                this.previewVidUrl = '';
+                this.selectedFiles.nativeElement.files = [];
               }
             });
             break;

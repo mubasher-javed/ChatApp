@@ -24,7 +24,6 @@
           <img
             [src]="msg.imgPath"
             *ngIf="msg.imgPath"
-            class="img-thumbnail"
             style="height: 50px; width: 50px"
             alt=""
           />
@@ -57,7 +56,6 @@
             <img
               [src]="msg.imgPath"
               *ngIf="msg.imgPath"
-              class="img-thumbnail"
               style="height: 50px; width: 50px"
               alt=""
             />
@@ -91,6 +89,34 @@
         {{ progress }}%
       </div>
     </div>
+    <!-- Image Preview -->
+    <ng-container *ngIf="progress === 0">
+      <div *ngIf="previewImgUrl && previewImgUrl !== ''">
+        <img
+          [src]="previewImgUrl"
+          [alt]=""
+          height="100"
+          width="100"
+          class="img-thumbnail"
+          style="position: relative; left: 4%; bottom: 5px"
+        />
+      </div>
+    </ng-container>
+    <!-- end image preview -->
+    <!-- Video preview -->
+    <ng-container *ngIf="progress === 0">
+      <div class="imagePreview" *ngIf="previewVidUrl && previewVidUrl !== ''">
+        <video
+          [src]="previewVidUrl"
+          height="200"
+          width="200"
+          style="position: relative; left: 4%; bottom: 5px"
+        >
+          Your browser not support videos
+        </video>
+      </div>
+    </ng-container>
+    <!-- end video preview -->
     <!-- New material message sending form -->
     <div class="d-flex mx-5 mb-3">
       <input
