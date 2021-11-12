@@ -26,14 +26,15 @@ mongoose
 io.on("connection", (socket) => {
   console.log("user connected");
 
-  socket.on("join", (data) => {
-    socket.join(data.roomId);
-  });
+  // socket.on("join", (data) => {
+  //   socket.join(data.roomId);
+  // });
 
   socket.on("new-message", async (data) => {
     // check if Chat room exists for both sender and receiver
     const { sender, receiver, message, imgPath, videoPath, audioPath } = data;
     const roomId = data.roomId.roomId;
+    console.log("received data for emitting is", data);
     const commonData = {
       senderId: sender._id,
       receiverId: receiver._id,

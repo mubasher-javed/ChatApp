@@ -21,6 +21,15 @@ app-chat-screen {
   margin-top: 4rem;
 }
 
+body {
+  /* background-color: #8ec5fc;
+  background-image: linear-gradient(62deg, #8ec5fc 0%, #e0c3fc 100%); */
+  background-image: radial-gradient(
+    circle 588px at 31.7% 40.2%,
+    rgba(225, 200, 239, 1) 21.4%,
+    rgba(163, 225, 233, 1) 57.1%
+  );
+}
 /* Will give all scrollbar's same styling */
 *::-webkit-scrollbar {
   width: 9px;

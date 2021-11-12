@@ -91,10 +91,8 @@ app.post("/api/upload/audio", audioUpload.single("audio"), async (req, res) => {
 
   console.log("received room id is:", req.body);
   if (!req.file) {
-    console.log("No audio is available!");
     return res.send({ success: false });
   }
-  console.log("audio received", req.file);
   try {
     const message = new Message({
       senderId: senderId,
@@ -147,13 +145,12 @@ app.post("/api/createRoom", async (req, res) => {
     ],
   });
 
+  if (room) return res.send({ roomId: room._id });
+
   // create chatRoom if not exists
-  if (!room) {
-    let newRoom = Room({ user1: senderId, user2: receiverId });
-    await newRoom.save();
-    return res.send({ roomId: newRoom._id });
-  }
-  res.send({ roomId: room._id });
+  let newRoom = Room({ user1: senderId, user2: receiverId });
+  await newRoom.save();
+  return res.send({ roomId: newRoom._id });
 });
 
 app.get("/api/messages/:senderId/:receiverId", async (req, res) => {

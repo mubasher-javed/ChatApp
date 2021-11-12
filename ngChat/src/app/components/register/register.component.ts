@@ -33,7 +33,7 @@ export class RegisterComponent implements OnInit {
       const token = res.headers.get('x-auth-token');
       if (res.status === 201) {
         localStorage.setItem('token', token || '');
-        this.router.navigateByUrl('/login');
+        this.router.navigateByUrl('/home');
       }
     });
   }

@@ -13,7 +13,16 @@
     <div *ngFor="let msg of messages">
       <span
         *ngIf="msg.receiverId !== receiverId; else sent"
-        class="message float-left rounded bg-primary p-2 text-white my-2"
+        class="
+          message
+          float-left
+          rounded
+          bg-primary
+          p-2
+          text-white
+          my-2
+          animate__animated animate__fadeInRight
+        "
       >
         {{ msg.body && msg.body }}
         <a
@@ -41,6 +50,7 @@
       <ng-template #sent class="mx-2">
         <span
           class="
+            animate__animated animate__fadeInLeft
             align-self-end
             float-right
             rounded
